@@ -152,6 +152,57 @@
       <option value="10">10</option>
       <option value="X">X</option>
     </select>
+
+    <!-- Pfeil 4 bis 6 -->
+    <div id="extra-arrows" class="hidden">
+      <label for="arrow4">Pfeil 4</label>
+      <select class="arrow-point" id="arrow4">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="X">X</option>
+      </select>
+
+      <label for="arrow5">Pfeil 5</label>
+      <select class="arrow-point" id="arrow5">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="X">X</option>
+      </select>
+
+      <label for="arrow6">Pfeil 6</label>
+      <select class="arrow-point" id="arrow6">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="X">X</option>
+      </select>
+    </div>
   </div>
 
   <!-- Rundenpunkte -->
@@ -178,37 +229,29 @@
   <script>
     // Referenzen zu den Elementen
     const formFields = ['tournament', 'name', 'distance', 'target'];
-    const roundField = document.getElementById('round');
     const roundPointsField = document.getElementById('round-points');
     const totalPointsField = document.getElementById('total-points');
     const participantsResults = document.getElementById('participants-results');
     const totalXDiv = document.getElementById('total-x');
     const submitButton = document.getElementById('submit');
     const clearButton = document.getElementById('clear');
+    const arrowSelect = document.getElementById('arrows');
+    const extraArrowsDiv = document.getElementById('extra-arrows');
 
     let totalPoints = 0;
     let totalX = 0;
 
-    // Lade gespeicherte Daten aus localStorage
-    window.onload = () => {
-      formFields.forEach(field => {
-        const element = document.getElementById(field);
-        if (localStorage.getItem(field)) {
-          element.value = localStorage.getItem(field);
-        }
-      });
-    };
-
-    // Speichere Formulardaten im localStorage
-    formFields.forEach(field => {
-      const element = document.getElementById(field);
-      element.addEventListener('input', () => {
-        localStorage.setItem(field, element.value);
-      });
+    // Zeigt zusätzliche Pfeile, wenn 6 Pfeile gewählt sind
+    arrowSelect.addEventListener('change', () => {
+      if (arrowSelect.value === '6') {
+        extraArrowsDiv.classList.remove('hidden');
+      } else {
+        extraArrowsDiv.classList.add('hidden');
+      }
     });
 
-    // Ergebnisse absenden
-    submitButton.addEventListener('click', () => {
+    // Berechne die Punkte für die Runde
+    function calculatePoints() {
       const arrowPoints = document.querySelectorAll('.arrow-point');
       let roundResult = 0;
       let xCount = 0;
@@ -226,36 +269,42 @@
       totalPointsField.value = totalPoints;
       totalX += xCount;
       totalXDiv.innerHTML = `<strong>Gesamt X:</strong> ${totalX}`;
+    }
+
+    // Ergebnisse absenden
+    submitButton.addEventListener('click', () => {
+      calculatePoints();
 
       const participantName = document.getElementById('name').value;
-      const roundNumber = roundField.value;
-
-      const resultDiv = document.createElement('div');
-      resultDiv.classList.add('participant-result');
-      resultDiv.innerHTML = `
-        <p><strong>Teilnehmer:</strong> ${participantName}</p>
-        <p><strong>Runde:</strong> ${roundNumber}</p>
-        <p><strong>Rundenpunkte:</strong> ${roundResult}</p>
-        <p><strong>Anzahl der X:</strong> ${xCount}</p>
+      const participantResult = document.createElement('div');
+      participantResult.classList.add('participant-result');
+      participantResult.innerHTML = `
+        <p><strong>${participantName}</strong></p>
+        <p>Rundenpunkte: ${roundPointsField.value}</p>
+        <p>Gesamtpunkte: ${totalPoints}</p>
       `;
-      participantsResults.appendChild(resultDiv);
+      participantsResults.appendChild(participantResult);
 
-      roundField.value = parseInt(roundNumber) + 1;
+      // Leere Eingabefelder nach Absenden
+      formFields.forEach(field => {
+        const element = document.getElementById(field);
+        element.value = '';
+      });
+      roundPointsField.value = 0;
     });
 
-    // Formular leeren
+    // Formular zurücksetzen
     clearButton.addEventListener('click', () => {
       formFields.forEach(field => {
-        document.getElementById(field).value = '';
-        localStorage.removeItem(field);
+        const element = document.getElementById(field);
+        element.value = '';
       });
-      roundField.value = '1';
-      roundPointsField.value = '0';
-      totalPointsField.value = '0';
+      roundPointsField.value = 0;
+      totalPointsField.value = 0;
+      participantsResults.innerHTML = '';
+      totalXDiv.innerHTML = '';
       totalPoints = 0;
       totalX = 0;
-      totalXDiv.innerHTML = '';
-      participantsResults.innerHTML = '';
     });
   </script>
 </body>
