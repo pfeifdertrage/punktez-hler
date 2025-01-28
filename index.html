@@ -38,9 +38,6 @@
     }
     .participant-result {
       margin-bottom: 10px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
     }
     .participant-result p {
       margin: 0;
@@ -69,23 +66,11 @@
     .whatsapp-button:hover {
       background-color: #128C7E;
     }
-    #export-pdf {
-      margin-top: 20px;
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    #export-pdf:hover {
-      background-color: #45a049;
-    }
   </style>
 </head>
 <body>
   <h1>Punkte Zähler</h1>
-
+  
   <!-- Turnier -->
   <label for="tournament">Turnier</label>
   <input type="text" id="tournament" placeholder="Turniername">
@@ -233,134 +218,146 @@
     </div>
   </div>
 
-  <button id="submit-btn">Ergebnis Absenden</button>
-  <button id="clear-btn">Formular Leeren</button>
+  <!-- Rundenpunkte -->
+  <label>Rundenpunkte</label>
+  <input type="number" id="round-points" value="0" readonly>
 
+  <!-- Gesamtpunkte -->
+  <label>Gesamtpunkte</label>
+  <input type="number" id="total-points" value="0" readonly>
+
+  <!-- Buttons -->
+  <button id="submit">Absenden</button>
+  <button id="clear">Formular leeren</button>
+
+  <!-- Ergebnisse -->
   <div class="results">
-    <h3>Ergebnisse</h3>
-    <div id="result-list"></div>
+    <h3>Ergebnisse der Teilnehmer:</h3>
+    <div id="participants-results"></div>
   </div>
 
-  <div id="export-pdf" class="hidden">Exportiere als PDF</div>
+  <!-- Gesamt X -->
+  <div class="total-result" id="total-x"></div>
 
   <script>
-    // Sicherstellen, dass die Teilnehmerergebnisse gespeichert bleiben
-    function loadResults() {
-      let results = JSON.parse(localStorage.getItem("results"));
-      if (!results) {
-        results = [];
+    // Referenzen zu den Elementen
+    const formFields = ['tournament', 'name', 'distance', 'target'];
+    const roundPointsField = document.getElementById('round-points');
+    const totalPointsField = document.getElementById('total-points');
+    const participantsResults = document.getElementById('participants-results');
+    const totalXDiv = document.getElementById('total-x');
+    const submitButton = document.getElementById('submit');
+    const clearButton = document.getElementById('clear');
+    const arrowSelect = document.getElementById('arrows');
+    const extraArrowsDiv = document.getElementById('extra-arrows');
+
+    let totalPoints = 0;
+    let totalX = 0;
+    let currentRound = 1;
+
+    // Lade gespeicherte Daten aus dem localStorage
+    window.onload = function() {
+      const storedData = JSON.parse(localStorage.getItem('tournamentData')) || {};
+      
+      // Setze gespeicherte Werte
+      document.getElementById('tournament').value = storedData.tournament || '';
+      document.getElementById('name').value = storedData.name || '';
+      document.getElementById('distance').value = storedData.distance || '';
+      document.getElementById('target').value = storedData.target || '';
+      document.getElementById('round').value = storedData.round || 1;
+      totalPoints = storedData.totalPoints || 0;
+      totalX = storedData.totalX || 0;
+
+      // Setze Teilnehmerergebnisse
+      participantsResults.innerHTML = storedData.participantsResults || '';
+      totalXDiv.innerHTML = `<strong>Gesamt X:</strong> ${totalX}`;
+
+      // Wenn es gespeicherte Daten gibt, wird die Rundenzahl fortgesetzt
+      currentRound = storedData.round || 1;
+    };
+
+    // Zeigt zusätzliche Pfeile, wenn 6 Pfeile gewählt sind
+    arrowSelect.addEventListener('change', () => {
+      if (arrowSelect.value === '6') {
+        extraArrowsDiv.classList.remove('hidden');
+      } else {
+        extraArrowsDiv.classList.add('hidden');
       }
-      return results;
-    }
+    });
 
-    // Speichern der aktuellen Ergebnisse
-    function saveResults(results) {
-      localStorage.setItem("results", JSON.stringify(results));
-    }
+    // Berechne die Punkte für die Runde
+    function calculatePoints() {
+      const arrowPoints = document.querySelectorAll('.arrow-point');
+      let roundResult = 0;
+      let xCount = 0;
 
-    // Funktion zur Berechnung des Gesamtpunktes
-    function calculateTotal(pointsArray) {
-      return pointsArray.reduce((acc, points) => {
-        return acc + (points === 'X' ? 10 : parseInt(points));
-      }, 0);
-    }
-
-    // Ergebnisse anzeigen
-    function displayResults() {
-      const results = loadResults();
-      const resultList = document.getElementById("result-list");
-      resultList.innerHTML = ""; // Clear existing results
-
-      results.forEach((result, index) => {
-        const participantDiv = document.createElement("div");
-        participantDiv.classList.add("participant-result");
-        participantDiv.innerHTML = `
-          <p><strong>Runde ${result.round}:</strong> ${result.name} - ${result.totalPoints} Punkte (${result.distance} ${result.target})</p>
-          <button class="whatsapp-button" onclick="sendWhatsAppMessage('${result.name}', '${result.totalPoints}')">Teilen über WhatsApp</button>
-        `;
-        resultList.appendChild(participantDiv);
+      arrowPoints.forEach(arrow => {
+        const value = arrow.value === 'X' ? 10 : parseInt(arrow.value, 10);
+        if (arrow.value === 'X') xCount++;
+        if (!isNaN(value)) {
+          roundResult += value;
+        }
       });
 
-      // Überprüfen, ob 10 Runden erreicht sind und den Export-Button anzeigen
-      if (results.length >= 10) {
-        document.getElementById("export-pdf").classList.remove("hidden");
-      }
+      roundPointsField.value = roundResult;
+      totalPoints += roundResult;
+      totalPointsField.value = totalPoints;
+      totalX += xCount;
+      totalXDiv.innerHTML = `<strong>Gesamt X:</strong> ${totalX}`;
     }
 
-    // WhatsApp Nachricht senden
-    function sendWhatsAppMessage(name, points) {
-      const message = `Ergebnis von ${name}: ${points} Punkte`;
-      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
-    }
+    // Ergebnisse absenden
+    submitButton.addEventListener('click', () => {
+      calculatePoints();
 
-    // Ergebnis absenden
-    document.getElementById("submit-btn").addEventListener("click", function() {
-      const name = document.getElementById("name").value;
-      const round = parseInt(document.getElementById("round").value);
-      const distance = document.getElementById("distance").value;
-      const target = document.getElementById("target").value;
-      const arrows = parseInt(document.getElementById("arrows").value);
+      const participantName = document.getElementById('name').value;
+      const participantResult = document.createElement('div');
+      participantResult.classList.add('participant-result');
+      participantResult.innerHTML = `
+        <p><strong>${participantName}</strong> (Runde ${currentRound})</p>
+        <p>Rundenpunkte: ${roundPointsField.value}</p>
+        <p>Gesamtpunkte: ${totalPoints}</p>
+        <button class="whatsapp-button" onclick="shareResult('${participantName}', ${currentRound}, ${roundPointsField.value}, ${totalPoints})">
+          Ergebnis auf WhatsApp teilen
+        </button>
+      `;
+      participantsResults.appendChild(participantResult);
 
-      // Punkte der Pfeile erfassen
-      const arrowPoints = [];
-      for (let i = 1; i <= arrows; i++) {
-        arrowPoints.push(document.getElementById(`arrow${i}`).value);
-      }
+      // Setze die Pfeilwerte zurück (Pfeil 1 bis 6)
+      const arrowPoints = document.querySelectorAll('.arrow-point');
+      arrowPoints.forEach(arrow => arrow.value = '0');
 
-      const totalPoints = calculateTotal(arrowPoints);
+      // Erhöhe die Rundenzahl
+      currentRound++;
+      document.getElementById('round').value = currentRound;
 
-      // Speichern der Runde und der Punkte
-      const results = loadResults();
-      results.push({
-        round: round,
-        name: name,
-        distance: distance,
-        target: target,
-        arrowPoints: arrowPoints,
+      // Speichere die Daten im localStorage
+      const dataToSave = {
+        tournament: document.getElementById('tournament').value,
+        name: document.getElementById('name').value,
+        distance: document.getElementById('distance').value,
+        target: document.getElementById('target').value,
+        round: currentRound,
         totalPoints: totalPoints,
-      });
+        totalX: totalX,
+        participantsResults: participantsResults.innerHTML
+      };
 
-      saveResults(results);
-
-      // Runde erhöhen
-      document.getElementById("round").value = round + 1;
-
-      // Ergebnisse anzeigen
-      displayResults();
+      localStorage.setItem('tournamentData', JSON.stringify(dataToSave));
     });
 
     // Formular zurücksetzen
-    document.getElementById("clear-btn").addEventListener("click", function() {
-      document.getElementById("tournament").value = "";
-      document.getElementById("name").value = "";
-      document.getElementById("distance").value = "bitte auswählen";
-      document.getElementById("target").value = "bitte auswählen";
-      document.getElementById("arrows").value = "3";
-      document.getElementById("round").value = "1";
-
-      // Alle Pfeile zurücksetzen
-      for (let i = 1; i <= 6; i++) {
-        document.getElementById(`arrow${i}`).value = "0";
-      }
+    clearButton.addEventListener('click', () => {
+      localStorage.removeItem('tournamentData');
+      window.location.reload();
     });
 
-    // Export als PDF
-    document.getElementById("export-pdf").addEventListener("click", function() {
-      const doc = new jsPDF();
-
-      const results = loadResults();
-      results.forEach((result, index) => {
-        doc.text(`Runde ${result.round}: ${result.name} - ${result.totalPoints} Punkte`, 10, 10 + (index * 10));
-      });
-
-      doc.save('ergebnisse.pdf');
-    });
-
-    // Initialisieren
-    displayResults();
+    // WhatsApp teilen Funktion
+    function shareResult(name, round, roundPoints, totalPoints) {
+      const message = `Ergebnis von ${name} (Runde ${round}):\nRundenpunkte: ${roundPoints}\nGesamtpunkte: ${totalPoints}`;
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
   </script>
-
-  <!-- jsPDF Script -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </body>
 </html>
