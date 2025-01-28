@@ -285,12 +285,13 @@
       `;
       participantsResults.appendChild(participantResult);
 
-      // Leere Eingabefelder nach Absenden
-      formFields.forEach(field => {
-        const element = document.getElementById(field);
-        element.value = '';
-      });
-      roundPointsField.value = 0;
+      // Setze die Pfeilwerte zurück (Pfeil 1 bis 6)
+      const arrowPoints = document.querySelectorAll('.arrow-point');
+      arrowPoints.forEach(arrow => arrow.value = '0');
+
+      // Ändere die Runde
+      const currentRound = parseInt(document.getElementById('round').value);
+      document.getElementById('round').value = currentRound + 1;
     });
 
     // Formular zurücksetzen
