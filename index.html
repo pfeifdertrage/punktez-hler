@@ -38,6 +38,9 @@
     }
     .participant-result {
       margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
     .participant-result p {
       margin: 0;
@@ -272,7 +275,7 @@
         const participantDiv = document.createElement("div");
         participantDiv.classList.add("participant-result");
         participantDiv.innerHTML = `
-          <p>Runde ${result.round}: ${result.name} - ${result.totalPoints} Punkte (${result.distance} ${result.target})</p>
+          <p><strong>Runde ${result.round}:</strong> ${result.name} - ${result.totalPoints} Punkte (${result.distance} ${result.target})</p>
           <button class="whatsapp-button" onclick="sendWhatsAppMessage('${result.name}', '${result.totalPoints}')">Teilen über WhatsApp</button>
         `;
         resultList.appendChild(participantDiv);
