@@ -53,12 +53,36 @@
       border: 0;
       border-top: 1px solid #ccc;
     }
+    .whatsapp-button {
+      margin-top: 10px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      padding: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .whatsapp-button:hover {
+      background-color: #128C7E;
+    }
+    #export-pdf {
+      margin-top: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    #export-pdf:hover {
+      background-color: #45a049;
+    }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
   <h1>Punkte Zähler</h1>
-  
+
   <!-- Turnier -->
   <label for="tournament">Turnier</label>
   <input type="text" id="tournament" placeholder="Turniername">
@@ -154,33 +178,195 @@
       <option value="X">X</option>
     </select>
 
+    <!-- Pfeil 4 bis 6 -->
     <div id="extra-arrows" class="hidden">
-      <!-- Pfeil 4 bis Pfeil 6 (optional) -->
-      <!-- Details wie oben -->
+      <label for="arrow4">Pfeil 4</label>
+      <select class="arrow-point" id="arrow4">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="X">X</option>
+      </select>
+
+      <label for="arrow5">Pfeil 5</label>
+      <select class="arrow-point" id="arrow5">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="X">X</option>
+      </select>
+
+      <label for="arrow6">Pfeil 6</label>
+      <select class="arrow-point" id="arrow6">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="X">X</option>
+      </select>
     </div>
   </div>
 
+  <!-- Rundenpunkte -->
   <label>Rundenpunkte</label>
   <input type="number" id="round-points" value="0" readonly>
+
+  <!-- Gesamtpunkte -->
   <label>Gesamtpunkte</label>
   <input type="number" id="total-points" value="0" readonly>
 
   <!-- Buttons -->
   <button id="submit">Absenden</button>
   <button id="clear">Formular leeren</button>
-  <button id="save-pdf" class="hidden">Ergebnisse als PDF speichern</button>
 
   <!-- Ergebnisse -->
   <div class="results">
     <h3>Ergebnisse der Teilnehmer:</h3>
     <div id="participants-results"></div>
   </div>
+
+  <!-- Gesamt X -->
   <div class="total-result" id="total-x"></div>
 
+  <!-- PDF Export Button -->
+  <button id="export-pdf" class="whatsapp-button hidden">PDF Exportieren</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <script>
-    // Funktionen (Kombination aus beiden Codes)
-    const { jsPDF } = window.jspdf;
-    // Implementierung der Berechnungen, Speichern der Daten und der PDF-Funktion
+    const submitButton = document.getElementById('submit');
+    const clearButton = document.getElementById('clear');
+    const exportPdfButton = document.getElementById('export-pdf');
+    const participantsResults = document.getElementById('participants-results');
+    const totalXDiv = document.getElementById('total-x');
+    const arrowSelect = document.getElementById('arrows');
+    const extraArrowsDiv = document.getElementById('extra-arrows');
+    let totalPoints = 0;
+    let totalX = 0;
+    let currentRound = 1;
+
+    // Show extra arrows for 6 arrows
+    arrowSelect.addEventListener('change', () => {
+      if (arrowSelect.value === '6') {
+        extraArrowsDiv.classList.remove('hidden');
+      } else {
+        extraArrowsDiv.classList.add('hidden');
+      }
+    });
+
+    // Calculate points for the round
+    function calculatePoints() {
+      const arrowPoints = document.querySelectorAll('.arrow-point');
+      let roundResult = 0;
+      let xCount = 0;
+
+      arrowPoints.forEach(arrow => {
+        const value = arrow.value;
+        if (value === 'X') {
+          xCount++;
+        } else {
+          roundResult += parseInt(value);
+        }
+      });
+
+      // Add points to total
+      totalPoints += roundResult;
+      totalX += xCount;
+
+      // Update round and total points
+      document.getElementById('round-points').value = roundResult;
+      document.getElementById('total-points').value = totalPoints;
+      totalXDiv.textContent = `Gesamt X: ${totalX}`;
+    }
+
+    // Submit event
+    submitButton.addEventListener('click', () => {
+      calculatePoints();
+
+      const name = document.getElementById('name').value;
+      const roundResult = document.getElementById('round-points').value;
+      const total = document.getElementById('total-points').value;
+      const totalXCount = totalXDiv.textContent;
+
+      const participantResultDiv = document.createElement('div');
+      participantResultDiv.classList.add('participant-result');
+      participantResultDiv.innerHTML = `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Rundenpunkte:</strong> ${roundResult}</p>
+        <p><strong>Gesamtpunkte:</strong> ${total}</p>
+        <p><strong>Gesamt X:</strong> ${totalXCount}</p>
+        <button class="whatsapp-button" onclick="sendWhatsApp(${total}, '${name}')">Mit WhatsApp teilen</button>
+      `;
+      participantsResults.appendChild(participantResultDiv);
+
+      // Show the PDF export button
+      exportPdfButton.classList.remove('hidden');
+    });
+
+    // Clear form
+    clearButton.addEventListener('click', () => {
+      document.getElementById('tournament').value = '';
+      document.getElementById('name').value = '';
+      document.getElementById('round').value = 1;
+      document.getElementById('distance').value = 'bitte auswählen';
+      document.getElementById('target').value = 'bitte auswählen';
+      document.getElementById('arrows').value = '3';
+      document.getElementById('arrow1').value = '0';
+      document.getElementById('arrow2').value = '0';
+      document.getElementById('arrow3').value = '0';
+      document.getElementById('arrow4').value = '0';
+      document.getElementById('arrow5').value = '0';
+      document.getElementById('arrow6').value = '0';
+      document.getElementById('round-points').value = '0';
+      document.getElementById('total-points').value = '0';
+      participantsResults.innerHTML = '';
+      totalXDiv.textContent = 'Gesamt X: 0';
+    });
+
+    // Send WhatsApp Message
+    function sendWhatsApp(total, name) {
+      const message = `Punkte für ${name} im Turnier: ${total} Punkte`;
+      const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+
+    // Export PDF
+    exportPdfButton.addEventListener('click', () => {
+      const doc = new jsPDF();
+
+      doc.text('Punkte Ergebnis', 10, 10);
+      let yOffset = 20;
+
+      document.querySelectorAll('.participant-result').forEach(result => {
+        doc.text(result.innerText, 10, yOffset);
+        yOffset += 30;
+      });
+
+      doc.save('ergebnisse.pdf');
+    });
   </script>
 </body>
 </html>
