@@ -225,181 +225,198 @@
   </div>
 
   <!-- Rundenpunkte -->
-  <label>Rundenpunkte</label>
-  <input type="number" id="round-points" value="0" readonly>
+<label>Rundenpunkte</label>
+<input type="number" id="round-points" value="0" readonly>
 
-  <!-- Gesamtpunkte -->
-  <label>Gesamtpunkte</label>
-  <input type="number" id="total-points" value="0" readonly>
+<!-- Gesamtpunkte -->
+<label>Gesamtpunkte</label>
+<input type="number" id="total-points" value="0" readonly>
 
-  <!-- Buttons -->
-  <button id="submit">Absenden</button>
-  <button id="clear">Formular leeren</button>
+<!-- Ergebnisse -->
+<div class="results">
+  <h3>Ergebnisse der Teilnehmer:</h3>
+  <table id="participants-results" style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Rundenpunkte</th>
+        <th>Erzielte X</th>
+        <th>Gesamtpunkte</th>
+        <th>Gesamt X</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Dynamische Ergebnisse werden hier angezeigt -->
+    </tbody>
+  </table>
+</div>
 
-  <!-- Ergebnisse -->
-  <div class="results">
-    <h3>Ergebnisse der Teilnehmer:</h3>
-    <div id="participants-results"></div>
-  </div>
+<!-- Gesamt X -->
+<div class="total-result" id="total-x"></div>
 
-  <!-- Gesamt X -->
-  <div class="total-result" id="total-x"></div>
 <!-- PDF-Button -->
-  <button id="pdf-button" class="pdf-button hidden">PDF-Download</button>
+<button id="pdf-button" class="pdf-button hidden">PDF-Download</button>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  // Referenzen zu den Elementen
+  const formFields = ['tournament', 'name', 'distance', 'target'];
+  const roundPointsField = document.getElementById('round-points');
+  const totalPointsField = document.getElementById('total-points');
+  const participantsResults = document.getElementById('participants-results');
+  const totalXDiv = document.getElementById('total-x');
+  const submitButton = document.getElementById('submit');
+  const clearButton = document.getElementById('clear');
+  const arrowSelect = document.getElementById('arrows');
+  const extraArrowsDiv = document.getElementById('extra-arrows');
+  const pdfButton = document.getElementById('pdf-button');
+  const roundField = document.getElementById('round');
 
-  <script>
-    // Referenzen zu den Elementen
-    const formFields = ['tournament', 'name', 'distance', 'target'];
-    const roundPointsField = document.getElementById('round-points');
-    const totalPointsField = document.getElementById('total-points');
-    const participantsResults = document.getElementById('participants-results');
-    const totalXDiv = document.getElementById('total-x');
-    const submitButton = document.getElementById('submit');
-    const clearButton = document.getElementById('clear');
-    const arrowSelect = document.getElementById('arrows');
-    const extraArrowsDiv = document.getElementById('extra-arrows');
-    const pdfButton = document.getElementById('pdf-button');
-    const roundField = document.getElementById('round');
+  let totalPoints = 0;
+  let totalX = 0;
+  let currentRound = 1;
 
-    let totalPoints = 0;
-    let totalX = 0;
-    let currentRound = 1;
+  // Lade gespeicherte Daten aus dem localStorage
+  window.onload = function() {
+    const storedData = JSON.parse(localStorage.getItem('tournamentData')) || {};
+    
+    // Setze gespeicherte Werte
+    document.getElementById('tournament').value = storedData.tournament || '';
+    document.getElementById('name').value = storedData.name || '';
+    document.getElementById('distance').value = storedData.distance || '';
+    document.getElementById('target').value = storedData.target || '';
+    document.getElementById('round').value = storedData.round || 1;
+    totalPoints = storedData.totalPoints || 0;
+    totalX = storedData.totalX || 0;
 
-    // Lade gespeicherte Daten aus dem localStorage
-    window.onload = function() {
-      const storedData = JSON.parse(localStorage.getItem('tournamentData')) || {};
-      
-      // Setze gespeicherte Werte
-      document.getElementById('tournament').value = storedData.tournament || '';
-      document.getElementById('name').value = storedData.name || '';
-      document.getElementById('distance').value = storedData.distance || '';
-      document.getElementById('target').value = storedData.target || '';
-      document.getElementById('round').value = storedData.round || 1;
-      totalPoints = storedData.totalPoints || 0;
-      totalX = storedData.totalX || 0;
+    // Setze Teilnehmerergebnisse
+    participantsResults.querySelector('tbody').innerHTML = storedData.participantsResults || '';
+    totalXDiv.innerHTML = `<strong>Gesamt X:</strong> ${totalX}`;
 
-      // Setze Teilnehmerergebnisse
-      participantsResults.innerHTML = storedData.participantsResults || '';
-      totalXDiv.innerHTML = `<strong>Gesamt X:</strong> ${totalX}`;
+    // Wenn es gespeicherte Daten gibt, wird die Rundenzahl fortgesetzt
+    currentRound = storedData.round || 1;
+  };
 
-      // Wenn es gespeicherte Daten gibt, wird die Rundenzahl fortgesetzt
-      currentRound = storedData.round || 1;
-    };
+  // Zeigt zusätzliche Pfeile, wenn 6 Pfeile gewählt sind
+  arrowSelect.addEventListener('change', () => {
+    if (arrowSelect.value === '6') {
+      extraArrowsDiv.classList.remove('hidden');
+    } else {
+      extraArrowsDiv.classList.add('hidden');
+    }
+  });
 
-    // Zeigt zusätzliche Pfeile, wenn 6 Pfeile gewählt sind
-    arrowSelect.addEventListener('change', () => {
-      if (arrowSelect.value === '6') {
-        extraArrowsDiv.classList.remove('hidden');
+  // Berechne die Punkte für die Runde und aktualisiere die Anzeige
+  submitButton.addEventListener('click', () => {
+    let roundPoints = 0;
+    let roundX = 0;
+    let arrows = [];
+
+    // Pfeilwerte sammeln
+    for (let i = 1; i <= parseInt(arrowSelect.value); i++) {
+      const arrowValue = document.getElementById(`arrow${i}`).value;
+      arrows.push(arrowValue);
+      if (arrowValue === 'X') {
+        roundX++;
       } else {
-        extraArrowsDiv.classList.add('hidden');
+        roundPoints += parseInt(arrowValue);
       }
-    });
+    }
 
-    // Berechne die Punkte für die Runde und aktualisiere die Anzeige
-    submitButton.addEventListener('click', () => {
-      let roundPoints = 0;
-      let roundX = 0;
-      let arrows = [];
+    // Runde und Gesamtpunkte anzeigen
+    roundPointsField.value = roundPoints;
+    totalPointsField.value = totalPoints + roundPoints;
 
-      // Pfeilwerte sammeln
-      for (let i = 1; i <= parseInt(arrowSelect.value); i++) {
-        const arrowValue = parseInt(document.getElementById(`arrow${i}`).value);
-        arrows.push(arrowValue);
-        roundPoints += arrowValue;
-        if (arrowValue === 'X') {
-          roundX++;
-        }
-      }
+    // Ergebnisse der Runde anzeigen
+    const participantName = document.getElementById('name').value;
+    const participantRow = document.createElement('tr');
+    participantRow.innerHTML = `
+      <td>${participantName}</td>
+      <td>${roundPoints}</td>
+      <td>${roundX}</td>
+      <td>${totalPoints + roundPoints}</td>
+      <td>${totalX + roundX}</td>
+    `;
+    
+    // Füge das Ergebnis in die Tabelle ein
+    participantsResults.querySelector('tbody').appendChild(participantRow);
 
-      totalPoints += roundPoints;
-      totalX += roundX;
+    // Gesamt X anzeigen
+    totalXDiv.innerHTML = `<strong>Gesamt X:</strong> ${totalX + roundX}`;
 
-      // Runde und Gesamtpunkte anzeigen
-      roundPointsField.value = roundPoints;
-      totalPointsField.value = totalPoints;
+    // Speichern der Ergebnisse im localStorage
+    localStorage.setItem('tournamentData', JSON.stringify({
+      tournament: document.getElementById('tournament').value,
+      name: participantName,
+      distance: document.getElementById('distance').value,
+      target: document.getElementById('target').value,
+      round: currentRound,
+      totalPoints: totalPoints + roundPoints,
+      totalX: totalX + roundX,
+      participantsResults: participantsResults.innerHTML,
+    }));
 
-      // Ergebnisse der Runde anzeigen
-      participantsResults.innerHTML += `<div class="participant-result">
-        <p>Runde ${currentRound}: ${roundPoints} Punkte (X: ${roundX})</p>
-        <button class="whatsapp-button" onclick="shareResult('${document.getElementById('name').value}', ${currentRound}, ${roundPoints}, ${totalPoints})">Teilen auf WhatsApp</button>
-      </div>`;
-
-      // Wenn Runde 10 erreicht ist, nach Fortsetzung fragen
-      if (currentRound === 10) {
-        if (confirm("Möchten Sie das Turnier fortsetzen?")) {
-          pdfButton.classList.remove('hidden');
-        }
-      }
-
-      // PDF-Button nach Runde 12 anzeigen
-      if (currentRound >= 12) {
+    // Wenn Runde 10 erreicht ist, nach Fortsetzung fragen
+    if (currentRound === 10) {
+      if (confirm("Möchten Sie das Turnier fortsetzen?")) {
         pdfButton.classList.remove('hidden');
       }
-
-      // Speichern der Ergebnisse im localStorage
-      localStorage.setItem('tournamentData', JSON.stringify({
-        tournament: document.getElementById('tournament').value,
-        name: document.getElementById('name').value,
-        distance: document.getElementById('distance').value,
-        target: document.getElementById('target').value,
-        round: currentRound,
-        totalPoints,
-        totalX,
-        participantsResults: participantsResults.innerHTML,
-      }));
-
-      currentRound++;
-      roundField.value = currentRound;
-    });
-
-    // Formular zurücksetzen
-    clearButton.addEventListener('click', () => {
-      if (confirm("Sind Sie sicher, dass Sie das Formular löschen möchten?")) {
-        localStorage.removeItem('tournamentData');
-        location.reload();
-      }
-    });
-
-    // PDF-Download erstellen
-    pdfButton.addEventListener('click', () => {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-
-      doc.text('Turnierergebnisse', 10, 10);
-      doc.text(`Turniername: ${document.getElementById('tournament').value}`, 10, 20);
-      doc.text(`Gesamt X: ${totalX}`, 10, 30);
-      doc.text(`Gesamtpunkte: ${totalPoints}`, 10, 40);
-
-      const results = participantsResults.children;
-      let yOffset = 50;
-      let pageHeight = doc.internal.pageSize.height;
-
-      for (let i = 0; i < results.length; i++) {
-        const resultText = results[i].innerText;
-        doc.text(resultText, 10, yOffset);
-        yOffset += 10;
-
-        // Neue Seite bei Bedarf hinzufügen
-        if (yOffset > pageHeight - 20) {
-          doc.addPage();
-          yOffset = 10;
-        }
-      }
-
-      doc.save('ergebnisse.pdf');
-    });
-
-    // WhatsApp teilen
-    function shareResult(name, round, roundPoints, totalPoints) {
-      const message = `Turnier: ${document.getElementById('tournament').value}\n` +
-                      `Teilnehmer: ${name}\n` +
-                      `Runde ${round}: ${roundPoints} Punkte\n` +
-                      `Gesamt: ${totalPoints} Punkte`;
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
     }
-  </script>
+
+    // PDF-Button nach Runde 12 anzeigen
+    if (currentRound >= 12) {
+      pdfButton.classList.remove('hidden');
+    }
+
+    currentRound++;
+    roundField.value = currentRound;
+  });
+
+  // Formular zurücksetzen
+  clearButton.addEventListener('click', () => {
+    if (confirm("Sind Sie sicher, dass Sie das Formular löschen möchten?")) {
+      localStorage.removeItem('tournamentData');
+      location.reload();
+    }
+  });
+
+  // PDF-Download erstellen
+  pdfButton.addEventListener('click', () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.text('Turnierergebnisse', 10, 10);
+    doc.text(`Turniername: ${document.getElementById('tournament').value}`, 10, 20);
+    doc.text(`Gesamt X: ${totalX}`, 10, 30);
+    doc.text(`Gesamtpunkte: ${totalPoints}`, 10, 40);
+
+    const results = participantsResults.querySelectorAll('tbody tr');
+    let yOffset = 50;
+    let pageHeight = doc.internal.pageSize.height;
+
+    for (let i = 0; i < results.length; i++) {
+      const resultText = results[i].innerText;
+      doc.text(resultText, 10, yOffset);
+      yOffset += 10;
+
+      // Neue Seite bei Bedarf hinzufügen
+      if (yOffset > pageHeight - 20) {
+        doc.addPage();
+        yOffset = 10;
+      }
+    }
+
+    doc.save('ergebnisse.pdf');
+  });
+
+  // WhatsApp teilen
+  function shareResult(name, round, roundPoints, totalPoints) {
+    const message = `Turnier: ${document.getElementById('tournament').value}\n` +
+                    `Teilnehmer: ${name}\n` +
+                    `Runde ${round}: ${roundPoints} Punkte\n` +
+                    `Gesamt: ${totalPoints} Punkte`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  }
+</script>
 </body>
 </html>
