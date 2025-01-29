@@ -270,7 +270,7 @@
 
       // Setze Teilnehmerergebnisse
       participantsResults.innerHTML = storedData.participantsResults || '';
-      totalXDiv.innerHTML = <strong>Gesamt X:</strong> ${totalX};
+      totalXDiv.innerHTML = `<strong>Gesamt X:</strong> ${totalX}`;
 
       // Wenn es gespeicherte Daten gibt, wird die Rundenzahl fortgesetzt
       currentRound = storedData.round || 1;
@@ -303,7 +303,7 @@
       totalPoints += roundResult;
       totalPointsField.value = totalPoints;
       totalX += xCount;
-      totalXDiv.innerHTML = <strong>Gesamt X:</strong> ${totalX};
+      totalXDiv.innerHTML = `<strong>Gesamt X:</strong> ${totalX}`;
     }
 
     // Ergebnisse absenden
@@ -313,14 +313,14 @@
       const participantName = document.getElementById('name').value;
       const participantResult = document.createElement('div');
       participantResult.classList.add('participant-result');
-      participantResult.innerHTML = 
+      participantResult.innerHTML = `
         <p><strong>${participantName}</strong> (Runde ${currentRound})</p>
         <p>Rundenpunkte: ${roundPointsField.value}</p>
         <p>Gesamtpunkte: ${totalPoints}</p>
         <button class="whatsapp-button" onclick="shareResult('${participantName}', ${currentRound}, ${roundPointsField.value}, ${totalPoints})">
           Ergebnis auf WhatsApp teilen
         </button>
-      ;
+      `;
       participantsResults.appendChild(participantResult);
 
       // Setze die Pfeilwerte zurück (Pfeil 1 bis 6)
@@ -354,10 +354,10 @@
 
     // WhatsApp teilen Funktion
     function shareResult(name, round, roundPoints, totalPoints) {
-      const message = Ergebnis von ${name} (Runde ${round}):\nRundenpunkte: ${roundPoints}\nGesamtpunkte: ${totalPoints};
-      const whatsappUrl = https://wa.me/?text=${encodeURIComponent(message)};
+      const message = `Ergebnis von ${name} (Runde ${round}):\nRundenpunkte: ${roundPoints}\nGesamtpunkte: ${totalPoints}`;
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
     }
   </script>
 </body>
-</html> 
+</html>
