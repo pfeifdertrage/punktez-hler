@@ -1,136 +1,130 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
+<Kopf>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Punkte Zähler</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
+  <meta name="viewport" content="width=Gerätebreite, Anfangsmaßstab=1.0">
+  <title>Punktezähler</title>
+  <Stil>
+    Körper {
+      Schriftfamilie: Arial, serifenlos;
+      Rand: 20px;
     }
-    label {
-      display: block;
-      margin: 10px 0 5px;
+    Etikett {
+      Anzeige: Block;
+      Rand: 10px 0 5px;
     }
-    select, input {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
+    auswählen, eingeben {
+      Breite: 100 %;
+      Polsterung: 8px;
+      Rand unten: 10px;
     }
-    button {
-      padding: 10px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      cursor: pointer;
+    Taste {
+      Polsterung: 10px;
+      Hintergrundfarbe: #007BFF;
+      Farbe: weiß;
+      Rand: keiner;
+      Cursor: Zeiger;
     }
-    button:hover {
-      background-color: #0056b3;
+    Schaltfläche: schweben {
+      Hintergrundfarbe: #0056b3;
     }
-    .results {
-      margin-top: 20px;
-      border-top: 2px solid #ccc;
-      padding-top: 10px;
+    .Ergebnisse {
+      Rand oben: 20px;
+      Rahmen oben: 2px durchgezogen #ccc;
+      Polsterung oben: 10px;
     }
-    .hidden {
-      display: none;
+    .versteckt {
+      Anzeige: keine;
     }
-    .participant-result {
-      margin-bottom: 10px;
+    .Teilnehmer-Ergebnis {
+      Rand unten: 10px;
     }
-    .participant-result p {
-      margin: 0;
+    .Teilnehmer-Ergebnis p {
+      Rand: 0;
     }
-    .total-result {
-      font-size: 1.5em;
-      font-weight: bold;
-      margin-top: 20px;
+    .Gesamtergebnis {
+      Schriftgröße: 1,5em;
+      Schriftstärke: fett;
+      Rand oben: 20px;
     }
     hr {
-      margin-top: 20px;
-      margin-bottom: 20px;
-      border: 0;
-      border-top: 1px solid #ccc;
+      Rand oben: 20px;
+      Rand unten: 20px;
+      Rand: 0;
+      Rahmen oben: 1px durchgezogen #ccc;
     }
     .whatsapp-button {
-      margin-top: 10px;
-      background-color: #25D366;
-      color: white;
-      border: none;
-      padding: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 5px;
+      Rand oben: 10px;
+      Hintergrundfarbe: #25D366;
+      Farbe: weiß;
+      Rand: keiner;
+      Polsterung: 8px;
+      Schriftgröße: 14px;
+      Cursor: Zeiger;
+      Rahmenradius: 5px;
     }
     .whatsapp-button:hover {
-      background-color: #128C7E;
+      Hintergrundfarbe: #128C7E;
     }
-    .pdf-button {
-      background-color: #4CAF50;
-    }
-    .pdf-button:hover {
-      background-color: #45a049;
-    }
-  </style>
-</head>
-<body>
-  <h1>Punkte Zähler</h1>
+  </Stil>
+</Kopf>
+<Text>
+  <h1>Punktezähler</h1>
   
   <!-- Turnier -->
-  <label for="tournament">Turnier</label>
+  <label for="turnier">Turnier</label>
   <input type="text" id="tournament" placeholder="Turniername">
 
   <!-- Name -->
-  <label for="name">Name</label>
-  <select id="name">
-    <option value="" disabled selected>Bitte Name auswählen</option>
+  <label für="name">Name</label>
+  <ID auswählen="Name">
+    <option value="" deaktiviert selected>Bitte Name auswählen</option>
     <option>Paul Lüders</option>
     <option>Jan Grüning</option>
-  </select>
+  </Auswählen>
 
   <!-- Runde -->
   <label for="round">Runde</label>
-  <input type="number" id="round" value="1" readonly>
+  <Eingabetyp="Nummer" ID="Runde" Wert="1" schreibgeschützt>
 
   <!-- Entfernung -->
   <label for="distance">Entfernung</label>
-  <select id="distance">
+  <select id="Entfernung">
     <option value="bitte auswählen">bitte auswählen</option>
-    <option value="10m">10m</option>
-    <option value="18m">18m</option>
-    <option value="20m">20m</option>
-    <option value="30m">30m</option>
-    <option value="40m">40m</option>
-    <option value="50m">50m</option>
-  </select>
+    <option value="10m">10 m</option>
+    <option value="18m">18 m</option>
+    <option value="20m">20 m</option>
+    <option value="30m">30 m</option>
+    <option value="40m">40 m</option>
+    <option value="50m">50 m</option>
+  </Auswählen>
 
   <!-- Auflage -->
   <label for="target">Auflage</label>
-  <select id="target">
+  <ID auswählen="Ziel">
     <option value="bitte auswählen">bitte auswählen</option>
     <option value="120cm">120 cm</option>
     <option value="80cm">80 cm</option>
     <option value="60cm">60 cm</option>
     <option value="40cm">40 cm</option>
-  </select>
+  </Auswählen>
 
   <!-- Pfeile -->
   <label for="arrows">Pfeile</label>
-  <select id="arrows">
+  <ID auswählen="Pfeile">
     <option value="3">3</option>
     <option value="6">6</option>
-  </select>
+  </Auswählen>
 
   <!-- Pfeil 1 bis Pfeil 6 -->
-  <div id="arrow-points">
+  <div id="Pfeilpunkte">
     <label for="arrow1">Pfeil 1</label>
-    <select class="arrow-point" id="arrow1">
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
+    <Klasse auswählen="Pfeilpunkt" id="Pfeil1">
+      <optionswert="0">0</option>
+      <optionswert="1">1</option>
+      <optionswert="2">2</option>
       <option value="3">3</option>
-      <option value="4">4</option>
+      <optionswert="4">4</option>
       <option value="5">5</option>
       <option value="6">6</option>
       <option value="7">7</option>
@@ -138,15 +132,15 @@
       <option value="9">9</option>
       <option value="10">10</option>
       <option value="X">X</option>
-    </select>
+    </Auswählen>
 
     <label for="arrow2">Pfeil 2</label>
-    <select class="arrow-point" id="arrow2">
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
+    <Klasse auswählen="Pfeilpunkt" id="Pfeil2">
+      <optionswert="0">0</option>
+      <optionswert="1">1</option>
+      <optionswert="2">2</option>
       <option value="3">3</option>
-      <option value="4">4</option>
+      <optionswert="4">4</option>
       <option value="5">5</option>
       <option value="6">6</option>
       <option value="7">7</option>
@@ -154,15 +148,15 @@
       <option value="9">9</option>
       <option value="10">10</option>
       <option value="X">X</option>
-    </select>
+    </Auswählen>
 
     <label for="arrow3">Pfeil 3</label>
-    <select class="arrow-point" id="arrow3">
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
+    <Klasse auswählen="Pfeilpunkt" id="Pfeil3">
+      <optionswert="0">0</option>
+      <optionswert="1">1</option>
+      <optionswert="2">2</option>
       <option value="3">3</option>
-      <option value="4">4</option>
+      <optionswert="4">4</option>
       <option value="5">5</option>
       <option value="6">6</option>
       <option value="7">7</option>
@@ -170,17 +164,17 @@
       <option value="9">9</option>
       <option value="10">10</option>
       <option value="X">X</option>
-    </select>
+    </Auswählen>
 
     <!-- Pfeil 4 bis 6 -->
-    <div id="extra-arrows" class="hidden">
+    <div id="extra-arrows" Klasse="versteckt">
       <label for="arrow4">Pfeil 4</label>
-      <select class="arrow-point" id="arrow4">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
+      <Klasse auswählen="Pfeilpunkt" id="Pfeil4">
+        <optionswert="0">0</option>
+        <optionswert="1">1</option>
+        <optionswert="2">2</option>
         <option value="3">3</option>
-        <option value="4">4</option>
+        <optionswert="4">4</option>
         <option value="5">5</option>
         <option value="6">6</option>
         <option value="7">7</option>
@@ -188,15 +182,15 @@
         <option value="9">9</option>
         <option value="10">10</option>
         <option value="X">X</option>
-      </select>
+      </Auswählen>
 
       <label for="arrow5">Pfeil 5</label>
-      <select class="arrow-point" id="arrow5">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
+      <Klasse auswählen="Pfeilpunkt" id="Pfeil5">
+        <optionswert="0">0</option>
+        <optionswert="1">1</option>
+        <optionswert="2">2</option>
         <option value="3">3</option>
-        <option value="4">4</option>
+        <optionswert="4">4</option>
         <option value="5">5</option>
         <option value="6">6</option>
         <option value="7">7</option>
@@ -204,15 +198,15 @@
         <option value="9">9</option>
         <option value="10">10</option>
         <option value="X">X</option>
-      </select>
+      </Auswählen>
 
       <label for="arrow6">Pfeil 6</label>
-      <select class="arrow-point" id="arrow6">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
+      <Klasse auswählen="Pfeilpunkt" id="Pfeil6">
+        <optionswert="0">0</option>
+        <optionswert="1">1</option>
+        <optionswert="2">2</option>
         <option value="3">3</option>
-        <option value="4">4</option>
+        <optionswert="4">4</option>
         <option value="5">5</option>
         <option value="6">6</option>
         <option value="7">7</option>
@@ -220,242 +214,150 @@
         <option value="9">9</option>
         <option value="10">10</option>
         <option value="X">X</option>
-      </select>
+      </Auswählen>
     </div>
   </div>
 
   <!-- Rundenpunkte -->
-<label>Rundenpunkte</label>
-<input type="number" id="round-points" value="0" readonly>
+  <label>Rundenpunkte</label>
+  <Eingabetyp="Nummer" ID="Rundenpunkte" Wert="0" schreibgeschützt>
 
-<!-- Gesamtpunkte -->
-<label>Gesamtpunkte</label>
-<input type="number" id="total-points" value="0" readonly>
+  <!-- Gesamtpunkte -->
+  <label>Gesamtpunkte</label>
+  <Eingabetyp="Nummer" ID="Gesamtpunktzahl" Wert="0" schreibgeschützt>
 
-<!-- Ergebnisse -->
-<div class="results">
-  <h3>Ergebnisse der Teilnehmer:</h3>
-  <table id="participants-results" style="width: 100%; border-collapse: collapse;">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Rundenpunkte</th>
-        <th>Erzielte X</th>
-        <th>Gesamtpunkte</th>
-        <th>Gesamt X</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Dynamische Ergebnisse werden hier angezeigt -->
-    </tbody>
-  </table>
-</div>
+  <!-- Schaltflächen -->
+  <button id="submit">Absenden</button>
+  <button id="clear">Formular leeren</button>
 
-<!-- Gesamt X -->
-<div class="total-result" id="total-x"></div>
+  <!-- Ergebnisse -->
+  <div class="Ergebnisse">
+    <h3>Ergebnisse der Teilnehmer:</h3>
+    <div id="Teilnehmer-Ergebnisse"></div>
+  </div>
 
-<!-- PDF-Button -->
-<button id="pdf-button" class="pdf-button hidden">PDF-Download</button>
+  <!-- Gesamt X -->
+  <div Klasse="total-result" id="total-x"></div>
 
-<script>
-    // Sicherstellen, dass die Teilnehmerergebnisse gespeichert bleiben
-    function loadResults() {
-      let results = JSON.parse(localStorage.getItem("results"));
-      if (!results) {
-        results = [];
+  <Skript>
     // Referenzen zu den Elementen
-    const formFields = ['tournament', 'name', 'distance', 'target'];
+    const formFields = ['Turnier', 'Name', 'Distanz', 'Ziel'];
     const roundPointsField = document.getElementById('round-points');
     const totalPointsField = document.getElementById('total-points');
     const participantsResults = document.getElementById('participants-results');
     const totalXDiv = document.getElementById('total-x');
-    const submitButton = document.getElementById('submit');
+    const submitButton = document.getElementById('senden');
     const clearButton = document.getElementById('clear');
-    const arrowSelect = document.getElementById('arrows');
+    const arrowSelect = document.getElementById('Pfeile');
     const extraArrowsDiv = document.getElementById('extra-arrows');
-    let totalPoints = 0;
-    let totalX = 0;
-    let currentRound = 1;
+
+    Lassen Sie totalPoints = 0;
+    sei totalX = 0;
+    sei currentRound = 1;
+
     // Lade gespeicherte Daten aus dem localStorage
-    window.onload = function() {
-      const storedData = JSON.parse(localStorage.getItem('tournamentData')) || {};
+    fenster.onload = funktion() {
+      const gespeicherteData = JSON.parse(localStorage.getItem('tournamentData')) || {};
       
       // Setze gespeicherte Werte
-      document.getElementById('tournament').value = storedData.tournament || '';
-      document.getElementById('name').value = storedData.name || '';
-      document.getElementById('distance').value = storedData.distance || '';
-      document.getElementById('target').value = storedData.target || '';
-      document.getElementById('round').value = storedData.round || 1;
-      totalPoints = storedData.totalPoints || 0;
-      totalX = storedData.totalX || 0;
+      document.getElementById('tournament').value = gespeicherteDaten.tournament || '';
+      document.getElementById('name').value = gespeicherteDaten.name || '';
+      document.getElementById('Entfernung').value = gespeicherteDaten.Entfernung || '';
+      document.getElementById('target').value = gespeicherteDaten.target || '';
+      document.getElementById('round').value = gespeicherteDaten.round || 1;
+      totalPoints = gespeicherteDaten.totalPoints || 0;
+      totalX = gespeicherteDaten.totalX || 0;
+
       // Setze Teilnehmerergebnisse
-      participantsResults.innerHTML = storedData.participantsResults || '';
+      TeilnehmerErgebnisse.innerHTML = gespeicherteDaten.TeilnehmerErgebnisse || '';
       totalXDiv.innerHTML = `<strong>Gesamt X:</strong> ${totalX}`;
+
       // Wenn es gespeicherte Daten gibt, wird die Rundenzahl fortgesetzt
-      currentRound = storedData.round || 1;
+      aktuelleRunde = gespeicherteDaten.Runde || 1;
     };
+
     // Zeigt zusätzliche Pfeile, wenn 6 Pfeile gewählt sind
-    arrowSelect.addEventListener('change', () => {
-      if (arrowSelect.value === '6') {
+    arrowSelect.addEventListener('ändern', () => {
+      wenn (PfeilAuswahl.Wert === '6') {
         extraArrowsDiv.classList.remove('hidden');
-      } else {
+      } anders {
         extraArrowsDiv.classList.add('hidden');
       }
-      return results;
-    }
-    // Speichern der aktuellen Ergebnisse
-    function saveResults(results) {
-      localStorage.setItem("results", JSON.stringify(results));
-    }
-    // Funktion zur Berechnung des Gesamtpunktes
-    function calculateTotal(pointsArray) {
-      return pointsArray.reduce((acc, points) => {
-        return acc + (points === 'X' ? 10 : parseInt(points));
-      }, 0);
-    }
     });
 
-    // Ergebnisse anzeigen
-    function displayResults() {
-      const results = loadResults();
-      const resultList = document.getElementById("result-list");
-      resultList.innerHTML = ""; // Clear existing results
-      results.forEach((result, index) => {
-        const participantDiv = document.createElement("div");
-        participantDiv.classList.add("participant-result");
-        participantDiv.innerHTML = `
-          <p><strong>Runde ${result.round}:</strong> ${result.name} - ${result.totalPoints} Punkte (${result.distance} ${result.target})</p>
-          <button class="whatsapp-button" onclick="sendWhatsAppMessage('${result.name}', '${result.totalPoints}')">Teilen über WhatsApp</button>
-        `;
-        resultList.appendChild(participantDiv);
     // Berechne die Punkte für die Runde
-    function calculatePoints() {
+    Funktion Punkte berechnen() {
       const arrowPoints = document.querySelectorAll('.arrow-point');
-      let roundResult = 0;
-      let xCount = 0;
-      arrowPoints.forEach(arrow => {
-        const value = arrow.value === 'X' ? 10 : parseInt(arrow.value, 10);
-        if (arrow.value === 'X') xCount++;
-        if (!isNaN(value)) {
-          roundResult += value;
+      lass roundResult = 0;
+      sei xCount = 0;
+
+      Pfeilpunkte.fürJeden(Pfeil => {
+        const-Wert = Pfeil.Wert === 'X'? 10: parseInt(Pfeil.Wert, 10);
+        wenn (Pfeil.Wert === 'X') xCount++;
+        wenn (!isNaN(Wert)) {
+          rundesErgebnis += Wert;
         }
       });
 
-      // Überprüfen, ob 10 Runden erreicht sind und den Export-Button anzeigen
-      if (results.length >= 10) {
-        document.getElementById("export-pdf").classList.remove("hidden");
-      }
-      roundPointsField.value = roundResult;
-      totalPoints += roundResult;
+      RundePunkteFeld.Wert = RundesErgebnis;
+      Gesamtpunkte += Rundenergebnis;
       totalPointsField.value = totalPoints;
-      totalX += xCount;
+      GesamtX + = xAnzahl;
       totalXDiv.innerHTML = `<strong>Gesamt X:</strong> ${totalX}`;
     }
 
-    // WhatsApp Nachricht senden
-    function sendWhatsAppMessage(name, points) {
-      const message = `Ergebnis von ${name}: ${points} Punkte`;
-      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
-    }
-    // Ergebnis absenden
-    document.getElementById("submit-btn").addEventListener("click", function() {
-      const name = document.getElementById("name").value;
-      const round = parseInt(document.getElementById("round").value);
-      const distance = document.getElementById("distance").value;
-      const target = document.getElementById("target").value;
-      const arrows = parseInt(document.getElementById("arrows").value);
-      // Punkte der Pfeile erfassen
-      const arrowPoints = [];
-      for (let i = 1; i <= arrows; i++) {
-        arrowPoints.push(document.getElementById(`arrow${i}`).value);
-      }
-      const totalPoints = calculateTotal(arrowPoints);
-      // Speichern der Runde und der Punkte
-      const results = loadResults();
-      results.push({
-        round: round,
-        name: name,
-        distance: distance,
-        target: target,
-        arrowPoints: arrowPoints,
     // Ergebnisse absenden
-    submitButton.addEventListener('click', () => {
-      calculatePoints();
-      const participantName = document.getElementById('name').value;
+    submitButton.addEventListener('klicken', () => {
+      Punkte berechnen();
+
+      const Teilnehmername = document.getElementById('name').value;
       const participantResult = document.createElement('div');
-      participantResult.classList.add('participant-result');
-      participantResult.innerHTML = `
+      participantResult.classList.add('Teilnehmerergebnis');
+      memberResult.innerHTML = `
         <p><strong>${participantName}</strong> (Runde ${currentRound})</p>
-        <p>Rundenpunkte: ${roundPointsField.value}</p>
+        <p>Rundungspunkte: ${roundPointsField.value}</p>
         <p>Gesamtpunkte: ${totalPoints}</p>
         <button class="whatsapp-button" onclick="shareResult('${participantName}', ${currentRound}, ${roundPointsField.value}, ${totalPoints})">
           Ergebnis auf WhatsApp teilen
         </button>
       `;
-      participantsResults.appendChild(participantResult);
+      Teilnehmerergebnisse.appendChild(Teilnehmerergebnis);
+
       // Setze die Pfeilwerte zurück (Pfeil 1 bis 6)
       const arrowPoints = document.querySelectorAll('.arrow-point');
-      arrowPoints.forEach(arrow => arrow.value = '0');
+      Pfeilpunkte.fürJeden(Pfeil => Pfeil.Wert = '0');
+
       // Erhöhe die Rundenzahl
-      currentRound++;
-      document.getElementById('round').value = currentRound;
+      aktuelleRunde++;
+      document.getElementById('round').value = aktuelleRunde;
+
       // Speichere die Daten im localStorage
       const dataToSave = {
-        tournament: document.getElementById('tournament').value,
-        name: document.getElementById('name').value,
-        distance: document.getElementById('distance').value,
-        target: document.getElementById('target').value,
-        round: currentRound,
-        totalPoints: totalPoints,
-      });
-      saveResults(results);
-        totalX: totalX,
-        participantsResults: participantsResults.innerHTML
+        Turnier: document.getElementById('tournament').value,
+        Name: document.getElementById('name').value,
+        Entfernung: document.getElementById('Entfernung').Wert,
+        Ziel: document.getElementById('Ziel').Wert,
+        Runde: aktuelleRunde,
+        Gesamtpunkte: Gesamtpunkte,
+        GesamtX: GesamtX,
+        TeilnehmerErgebnisse: TeilnehmerErgebnisse.innerHTML
       };
 
-      // Runde erhöhen
-      document.getElementById("round").value = round + 1;
-      // Ergebnisse anzeigen
-      displayResults();
       localStorage.setItem('tournamentData', JSON.stringify(dataToSave));
     });
 
     // Formular zurücksetzen
-    document.getElementById("clear-btn").addEventListener("click", function() {
-      document.getElementById("tournament").value = "";
-      document.getElementById("name").value = "";
-      document.getElementById("distance").value = "bitte auswählen";
-      document.getElementById("target").value = "bitte auswählen";
-      document.getElementById("arrows").value = "3";
-      document.getElementById("round").value = "1";
-      // Alle Pfeile zurücksetzen
-      for (let i = 1; i <= 6; i++) {
-        document.getElementById(`arrow${i}`).value = "0";
-      }
-    clearButton.addEventListener('click', () => {
-      localStorage.removeItem('tournamentData');
-      window.location.reload();
+    clearButton.addEventListener('klicken', () => {
+      localStorage.removeItem('Turnierdaten');
+      fenster.standort.neuladen();
     });
 
-    // Export als PDF
-    document.getElementById("export-pdf").addEventListener("click", function() {
-      const doc = new jsPDF();
-      const results = loadResults();
-      results.forEach((result, index) => {
-        doc.text(`Runde ${result.round}: ${result.name} - ${result.totalPoints} Punkte`, 10, 10 + (index * 10));
-      });
-      doc.save('ergebnisse.pdf');
-    });
-    // Initialisieren
-    displayResults();
     // WhatsApp teilen Funktion
-    function shareResult(name, round, roundPoints, totalPoints) {
+    Funktion shareResult(Name, Runde, Rundenpunkte, Gesamtpunkte) {
       const message = `Ergebnis von ${name} (Runde ${round}):\nRundenpunkte: ${roundPoints}\nGesamtpunkte: ${totalPoints}`;
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
+      Fenster.öffnen(whatsappUrl, '_blank');
     }
-  </script>
-  <!-- jsPDF Script -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  </Skript>
 </body>
 </html>
