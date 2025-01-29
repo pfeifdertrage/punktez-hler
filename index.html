@@ -346,17 +346,24 @@
       localStorage.setItem('tournamentData', JSON.stringify(dataToSave));
     });
 
-    // Formular zurücksetzen
+    // Formular leeren
     clearButton.addEventListener('click', () => {
+      formFields.forEach(field => document.getElementById(field).value = '');
+      document.getElementById('round-points').value = 0;
+      document.getElementById('total-points').value = 0;
+      totalXDiv.innerHTML = '';
+      participantsResults.innerHTML = '';
+      totalPoints = 0;
+      totalX = 0;
+      currentRound = 1;
       localStorage.removeItem('tournamentData');
-      window.location.reload();
     });
 
-    // WhatsApp teilen Funktion
+    // WhatsApp-Button Funktion
     function shareResult(name, round, roundPoints, totalPoints) {
       const message = `Ergebnis von ${name} (Runde ${round}):\nRundenpunkte: ${roundPoints}\nGesamtpunkte: ${totalPoints}`;
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
+      const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
     }
   </script>
 </body>
