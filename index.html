@@ -339,32 +339,349 @@
         target: document.getElementById('target').value,
         round: currentRound,
         totalPoints: totalPoints,
-        totalX: totalX,
-        participantsResults: participantsResults.innerHTML
-      };
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Punkte Zähler</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f7fa;
+    }
+    h1 {
+      text-align: center;
+      color: #007BFF;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .results {
+      margin-top: 20px;
+      border-top: 2px solid #ccc;
+      padding-top: 20px;
+    }
+    .results p {
+      margin-top: 10px;
+      font-size: 1.1em;
+      color: #333;
+    }
+    .round-result {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      border-left: 5px solid #007BFF;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .round-result.highlight-round {
+      border-left-color: #28a745;
+      background-color: #e2f7e1;
+    }
+    .highlight-round {
+      border: 3px solid #007BFF;
+      padding: 25px;
+      background-color: #f0f8ff;
+      font-size: 1.1em;
+    }
+    .button-container {
+      display: flex;
+      gap: 10px;
+    }
+    .whatsapp-button {
+      padding: 12px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-top: 20px;
+      width: 100%;
+    }
+    .whatsapp-button:hover {
+      background-color: #128C7E;
+    }
+    .input-container {
+      display: flex;
+      flex-direction: column;
+    }
+    .input-container label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
 
-      localStorage.setItem('tournamentData', JSON.stringify(dataToSave));
+  <h1>Punkte Zähler</h1>
+
+  <div class="input-container">
+    <label for="tournament">Turnier</label>
+    <input type="text" id="tournament" placeholder="Turniername">
+
+    <label for="name">Name</label>
+    <select id="name">
+      <option value="" disabled selected>Bitte Name auswählen</option>
+      <option>Paul Lüders</option>
+      <option>Jan Grüning</option>
+    </select>
+
+    <label for="distance">Entfernung</label>
+    <select id="distance">
+      <option value="bitte auswählen">bitte auswählen</option>
+      <option value="10m">10m</option>
+      <option value="18m">18m</option>
+      <option value="20m">20m</option>
+      <option value="30m">30m</option>
+      <option value="40m">40m</option>
+      <option value="50m">50m</option>
+    </select>
+
+    <label for="target">Auflage</label>
+    <select id="target">
+      <option value="bitte auswählen">bitte auswählen</option>
+      <option value="120cm">120 cm</option>
+      <option value="80cm">80 cm</option>
+      <option value="60cm">60 cm</option>
+      <option value="40cm">40 cm</option>
+    </select>
+
+    <label for="rounds">Rundenzahl</label>
+    <select id="rounds">
+      <option>10</option>
+      <option>12</option>
+    </select>
+
+    <label for="round">Runde</label>
+    <input type="number" id="round" value="1" readonly>
+
+    <label for="arrows">Pfeile</label>
+    <select id="arrows">
+      <option value="3" selected>3</option>
+      <option value="6">6</option>
+    </select>
+
+    <div id="arrow-points">
+      <label for="arrow1">Pfeil 1</label>
+      <select class="arrow-point" id="arrow1"></select>
+
+      <label for="arrow2">Pfeil 2</label>
+      <select class="arrow-point" id="arrow2"></select>
+
+      <label for="arrow3">Pfeil 3</label>
+      <select class="arrow-point" id="arrow3"></select>
+
+      <div id="extra-arrows" style="display: none;">
+        <label for="arrow4">Pfeil 4</label>
+        <select class="arrow-point" id="arrow4"></select>
+
+        <label for="arrow5">Pfeil 5</label>
+        <select class="arrow-point" id="arrow5"></select>
+
+        <label for="arrow6">Pfeil 6</label>
+        <select class="arrow-point" id="arrow6"></select>
+      </div>
+    </div>
+
+    <label>Rundenpunkte</label>
+    <input type="number" id="round-points" value="0" readonly>
+
+    <label>Gesamtpunkte</label>
+    <input type="number" id="total-points" value="0" readonly>
+
+    <div class="button-container">
+      <button id="submit">Berechnen</button>
+    </div>
+  </div>
+
+  <div class="results">
+    <h2 id="result-title">Ergebnisse von [Name] beim Turnier [Turnier]:</h2>
+    <p>&nbsp;</p>
+    <div id="round-results"></div>
+  </div>
+
+  <div id="whatsapp-button-container" style="display: none;">
+    <button class="whatsapp-button" onclick="shareOnWhatsApp()">Ergebnisse teilen auf WhatsApp</button>
+  </div>
+
+  <div id="reset-button-container" style="display: none;">
+    <button class="whatsapp-button" onclick="resetForm()">Formular leeren</button>
+  </div>
+
+  <script>
+    const arrowSelect = document.getElementById('arrows');
+    const extraArrowsDiv = document.getElementById('extra-arrows');
+    const roundPointsField = document.getElementById('round-points');
+    const totalPointsField = document.getElementById('total-points');
+    const submitButton = document.getElementById('submit');
+    const resultTitle = document.getElementById('result-title');
+    const roundResultsDiv = document.getElementById('round-results');
+    const roundsSelect = document.getElementById('rounds');
+    const distanceSelect = document.getElementById('distance');
+    const targetSelect = document.getElementById('target');
+    const whatsappButtonContainer = document.getElementById('whatsapp-button-container');
+    const resetButtonContainer = document.getElementById('reset-button-container');
+
+    let totalXCount = 0;
+    let roundCounter = 1;
+
+    function populateArrowSelect(select) {
+      select.innerHTML = "";
+      const values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "X"];
+      values.forEach(value => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        select.appendChild(option);
+      });
+      select.value = "0"; 
+    }
+
+    document.querySelectorAll(".arrow-point").forEach(select => {
+      populateArrowSelect(select);
     });
 
-    // Formular leeren
-    clearButton.addEventListener('click', () => {
-      formFields.forEach(field => document.getElementById(field).value = '');
-      document.getElementById('round-points').value = 0;
-      document.getElementById('total-points').value = 0;
-      totalXDiv.innerHTML = '';
-      participantsResults.innerHTML = '';
-      totalPoints = 0;
-      totalX = 0;
-      currentRound = 1;
-      localStorage.removeItem('tournamentData');
+    arrowSelect.addEventListener('change', () => {
+      extraArrowsDiv.style.display = arrowSelect.value === '6' ? 'block' : 'none';
     });
 
-    // WhatsApp-Button Funktion
-    function shareResult(name, round, roundPoints, totalPoints) {
-      const message = `Ergebnis von ${name} (Runde ${round}):\nRundenpunkte: ${roundPoints}\nGesamtpunkte: ${totalPoints}`;
+    submitButton.addEventListener('click', () => {
+      let roundPoints = 0;
+      let roundXCount = 0;
+      const selectedArrowCount = parseInt(arrowSelect.value, 10);
+      const name = document.getElementById('name').value || "[Name]";
+      const tournament = document.getElementById('tournament').value || "[Turnier]";
+      const totalRounds = parseInt(roundsSelect.value, 10);
+      const distance = distanceSelect.value || "bitte auswählen";
+      const target = targetSelect.value || "bitte auswählen";
+
+      for (let i = 1; i <= selectedArrowCount; i++) {
+        const arrowValue = document.getElementById(`arrow${i}`).value;
+        if (arrowValue === "X") {
+          roundPoints += 10;
+          roundXCount++;
+        } else {
+          roundPoints += parseInt(arrowValue, 10);
+        }
+      }
+
+      roundPointsField.value = roundPoints;
+      let totalPoints = parseInt(totalPointsField.value, 10) + roundPoints;
+      totalPointsField.value = totalPoints;
+      totalXCount += roundXCount;
+
+      // Wenn Runde 6 bis 9 erreicht sind, Ergebnisse der Runden 1-4 löschen
+      if (roundCounter > 4 && roundCounter < 10) {
+        roundResultsDiv.innerHTML = '';  // Lösche die Ergebnisse der Runden 1-4
+      }
+
+      const roundResult = document.createElement('div');
+      roundResult.classList.add('round-result');
+      
+      if (roundCounter === 5 || roundCounter === 10) {
+        roundResult.classList.add('highlight-round');
+        roundResult.innerHTML = `
+          <strong>${roundCounter === 5 ? 'Pause' : 'Ende des Turniers'}</strong><br>
+          Rundenergebnis: ${roundPoints}<br>
+          Erzielte "X": ${roundXCount}<br>
+          Gesamtpunkte: ${totalPoints}<br>
+          Gesamte "X": ${totalXCount}<br>
+        `;
+        if (roundCounter === 5) {
+          whatsappButtonContainer.style.display = 'block'; // Zeige WhatsApp-Button nur nach Runde 5
+        }
+      } else {
+        roundResult.innerHTML = `
+          <strong>Runde ${roundCounter}:</strong><br>
+          Rundenergebnis: ${roundPoints}<br>
+          Erzielte "X": ${roundXCount}<br>
+          Gesamtpunkte: ${totalPoints}<br>
+          Gesamte "X": ${totalXCount}<br>
+        `;
+      }
+
+      roundResultsDiv.appendChild(roundResult);
+      roundCounter++;
+
+      resultTitle.innerHTML = `Ergebnisse von ${name} beim Turnier ${tournament}:`;
+
+      document.querySelectorAll(".arrow-point").forEach(select => {
+        select.value = "0";
+      });
+
+      document.getElementById('round').value = roundCounter;
+
+      // Bei Runde 10 wird der Formularleeren-Button angezeigt
+      if (roundCounter > 9) {
+        resetButtonContainer.style.display = 'block';
+      }
+    });
+
+    function shareOnWhatsApp() {
+      const name = document.getElementById('name').value;
+      const tournament = document.getElementById('tournament').value;
+      const round = document.getElementById('round').value;
+      const distance = document.getElementById('distance').value;
+      const target = document.getElementById('target').value;
+      const roundPoints = document.getElementById('round-points').value;
+      const totalPoints = totalPointsField.value;
+      const totalX = totalXCount;
+
+      const message = `<b>${name}</b> hat zur Pause beim Turnier ${tournament} nach Runde ${round} bei einer Entfernung von ${distance} und einer Auflage von ${target} folgendes Ergebnis erreicht:\n\n` +
+                      `Erzielte Rundenpunkte in Runde ${round}: ${roundPoints}\n` +
+                      `Erzielte "X" in Runde ${round}: ${totalX}\n` +
+                      `Gesamtpunkte: ${totalPoints}\n` +
+                      `Gesamte "X": ${totalX}`;
+
       const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
       window.open(url, '_blank');
     }
+
+    function resetForm() {
+      document.getElementById('tournament').value = '';
+      document.getElementById('name').value = '';
+      document.getElementById('distance').value = '';
+      document.getElementById('target').value = '';
+      document.getElementById('rounds').value = '10';
+      document.getElementById('round').value = '1';
+      document.getElementById('arrows').value = '3';
+      document.querySelectorAll(".arrow-point").forEach(select => {
+        select.value = '0';
+      });
+      document.getElementById('round-points').value = '0';
+      document.getElementById('total-points').value = '0';
+      roundResultsDiv.innerHTML = '';
+      totalXCount = 0;
+      roundCounter = 1;
+      resetButtonContainer.style.display = 'none';
+      whatsappButtonContainer.style.display = 'none';
+    }
   </script>
+
 </body>
 </html>
