@@ -24,7 +24,12 @@
     .pause-result h3 { font-size: 1.2em; color: #007BFF; }
   </style>
 </head>
-<body>  <h1>Punkte Zähler</h1>  <div class="input-container">
+<body>  <h1>Punkte Zähler</h1>
+
+<button id="new-tournament-button">Neues Turnier beginnen</button>
+
+
+  <div class="input-container">
     <label for="tournament">Turnier</label>
     <input type="text" id="tournament" placeholder="Turniername"><label for="name">Name</label>
 <select id="name">
@@ -295,6 +300,45 @@
  }
 
     populateArrows();
+
+document.getElementById("new-tournament-button").addEventListener("click", function() {
+  // Formularfelder zurücksetzen
+  document.getElementById('tournament').value = "";
+  document.getElementById('name').value = "";
+  document.getElementById('distance').value = "bitte auswählen";
+  document.getElementById('target').value = "bitte auswählen";
+  document.getElementById('rounds').value = "10";
+  document.getElementById('round').value = 1;
+  document.getElementById('arrows').value = "3";
+  document.getElementById('round-points').value = 0;
+  document.getElementById('total-points').value = 0;
+  
+  // Alle Pfeil-Dropdowns zurücksetzen
+  document.querySelectorAll(".arrow-point").forEach(arrow => arrow.value = "0");
+
+  // Alle Ergebnisse entfernen
+  document.getElementById("round-results").innerHTML = "";
+
+  // Rundenzählung zurücksetzen
+  roundCounter = 1;
+  totalPoints = 0;
+  totalXCount = 0;
+  roundResults = [];
+  round5Points = 0;
+  round10Points = 0;
+
+  // Button "Formular leeren" ausblenden
+  document.getElementById("clear-form-button").style.display = "none";
+
+  // Zurücksetzen des Titel-Elements
+  document.getElementById("result-title").classList.add("hidden");
+
+  // Den Berechnen-Button aktivieren, falls er deaktiviert wurde
+  document.getElementById("submit").disabled = false;
+});
+
+
+
   </script>
 </body>
 </html>
