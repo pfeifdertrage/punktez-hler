@@ -276,7 +276,7 @@
   let round10 = roundResults.find(result => result.round === 10);
 
   if (round5) {
-    message += `⭐ *Ergebnis Runde 5 (Pause)* ⭐\n`;
+    message += `*Ergebnis Runde 5 (Pause)*\n`;
     message += `Rundenpunkte: ${round5.points}\n`;
     message += `Erzielte X: ${round5.xCount}\n`;
     message += `Gesamtpunkte: ${totalPoints}\n`;
@@ -284,11 +284,11 @@
   }
 
   if (round10) {
-    message += `🏆 *Endergebnis nach 10 Runden* 🏆\n`;
+    message += `*Endergebnis nach 10 Runden*\n`;
     message += `Gesamtergebnis der Runde: ${round10.points}\n`;
     message += `Erzielte X in der Runde: ${round10.xCount}\n\n`;
-    message += `🔥 *Gesamtpunkte nach 10 Runden: ${totalPoints}*\n`;
-    message += `🔥 *Gesamt X nach 10 Runden: ${totalXCount}*\n`;
+    message += `*Gesamtpunkte nach 10 Runden: ${totalPoints}*\n`;
+    message += `*Gesamt X nach 10 Runden: ${totalXCount}*\n`;
   }
 
   if (!message) {
