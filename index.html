@@ -72,8 +72,8 @@
     </select>
     <label for="rounds">Rundenzahl</label>
     <select id="rounds">
-      <option>10</option>
-      <option>12</option>
+      <option>20</option>
+      <option>24</option>
     </select>
     <label for="round">Runde</label>
     <input type="number" id="round" value="1" readonly>
@@ -161,25 +161,25 @@
 
       document.getElementById("round-points").value = points;
 
-      if (roundCounter === 5 && document.getElementById("rounds").value === "10") {
+      if (roundCounter === 10 && document.getElementById("rounds").value === "20") {
         pausePoints = totalPoints;
         pauseXCount = totalXCount;
-        roundResults = roundResults.slice(4);
-      }
-
-      if (roundCounter === 6 && document.getElementById("rounds").value === "12") {
-        pausePoints = totalPoints;
-        pauseXCount = totalXCount;
-        roundResults = roundResults.slice(5);
-      }
-
-      if (roundCounter === 10 && document.getElementById("rounds").value === "10") {
         roundResults = roundResults.slice(9);
+      }
+
+      if (roundCounter === 12 && document.getElementById("rounds").value === "24") {
+        pausePoints = totalPoints;
+        pauseXCount = totalXCount;
+        roundResults = roundResults.slice(11);
+      }
+
+      if (roundCounter === 20 && document.getElementById("rounds").value === "20") {
+        roundResults = roundResults.slice(19);
         document.getElementById("submit").disabled = true;
       }
 
-      if (roundCounter === 12 && document.getElementById("rounds").value === "12") {
-        roundResults = roundResults.slice(11);
+      if (roundCounter === 24 && document.getElementById("rounds").value === "24") {
+        roundResults = roundResults.slice(23);
         document.getElementById("submit").disabled = true;
       }
 
@@ -196,7 +196,7 @@
         let roundDiv = document.createElement("div");
         roundDiv.classList.add("round-result");
 
-        if (result.round === 5 && document.getElementById("rounds").value === "10") {
+        if (result.round === 10 && document.getElementById("rounds").value === "20") {
           roundDiv.classList.add("highlight-round");
           roundDiv.innerHTML = `
             <strong>Zur Pause: Ergebnis von ${participantName} beim Turnier ${tournamentName} nach ${result.round} Runden:</strong><br>
@@ -206,55 +206,55 @@
             <strong>Gesamtpunkte:</strong> <strong>${totalPoints}</strong><br>
             <strong>Gesamt X:</strong> <strong>${totalXCount}</strong>
             <div class="whatsapp-container">
-              <button class="whatsapp-button" onclick="shareResult('Zur Pause: Ergebnis von ${participantName} beim Turnier ${tournamentName} nach ${result.round} Runden: Rundenpunkte: ${result.points} Erzielte X: ${result.xCount} Gesamtpunkte: ${totalPoints} Gesamt X: ${totalXCount}')">Teilen auf WhatsApp</button>
+              <button class="whatsapp-button" onclick="shareResult('Zur Pause: Ergebnis von ${participantName} beim Turnier: ${tournamentName} nach ${result.round} Runden: Rundenpunkte: ${result.points} Erzielte X: ${result.xCount} Gesamtpunkte: ${totalPoints} Gesamt X: ${totalXCount}')">Teilen auf WhatsApp</button>
             </div>
           `;
-        } else if (result.round === 6 && document.getElementById("rounds").value === "12") {
+        } else if (result.round === 12 && document.getElementById("rounds").value === "24") {
           roundDiv.classList.add("highlight-round");
           roundDiv.innerHTML = `
-            <strong>Zur Pause: Ergebnis von ${participantName} beim Turnier ${tournamentName} nach ${result.round} Runden:</strong><br>
+            <strong>Zur Pause: Ergebnis von ${participantName} beim Turnier: ${tournamentName} nach ${result.round} Runden:</strong><br>
             Rundenpunkte: ${result.points}<br>
             Erzielte X: ${result.xCount}<br>
             <hr>
             <strong>Gesamtpunkte:</strong> <strong>${totalPoints}</strong><br>
             <strong>Gesamt X:</strong> <strong>${totalXCount}</strong>
             <div class="whatsapp-container">
-              <button class="whatsapp-button" onclick="shareResult('Zur Pause: Ergebnis von ${participantName} beim Turnier ${tournamentName} nach ${result.round} Runden: Rundenpunkte: ${result.points} Erzielte X: ${result.xCount} Gesamtpunkte: ${totalPoints} Gesamt X: ${totalXCount}')">Teilen auf WhatsApp</button>
+              <button class="whatsapp-button" onclick="shareResult('Zur Pause: Ergebnis von ${participantName} beim Turnier: ${tournamentName} nach ${result.round} Runden: Rundenpunkte: ${result.points} Erzielte X: ${result.xCount} Gesamtpunkte: ${totalPoints} Gesamt X: ${totalXCount}')">Teilen auf WhatsApp</button>
             </div>
           `;
-        } else if (result.round === 10 && document.getElementById("rounds").value === "10") {
+        } else if (result.round === 20 && document.getElementById("rounds").value === "20") {
           roundDiv.classList.add("highlight-round");
           roundDiv.innerHTML = `
-            <strong>Endstand von ${participantName} beim Turnier ${tournamentName} nach ${result.round} Runden:</strong><br>
+            <strong>Endstand von ${participantName} beim Turnier: ${tournamentName} nach ${result.round} Runden:</strong><br>
             Rundenpunkte: ${result.points}<br>
             Erzielte X: ${result.xCount}<br>
             <hr>
             <strong>Gesamtpunkte:</strong> <strong>${totalPoints}</strong> (Pause: ${pausePoints})<br>
             <strong>Gesamt X:</strong> <strong>${totalXCount}</strong> (Pause: ${pauseXCount})
             <div class="whatsapp-container">
-              <button class="whatsapp-button" onclick="shareResult('Endstand von ${participantName} beim Turnier ${tournamentName} nach ${result.round} Runden: Rundenpunkte: ${result.points} Erzielte X: ${result.xCount} Gesamtpunkte: ${totalPoints} Gesamt X: ${totalXCount}')">Teilen auf WhatsApp</button>
+              <button class="whatsapp-button" onclick="shareResult('Endstand von ${participantName} beim Turnier: ${tournamentName} nach ${result.round} Runden: Rundenpunkte: ${result.points} Erzielte X: ${result.xCount} Gesamtpunkte: ${totalPoints} Gesamt X: ${totalXCount}')">Teilen auf WhatsApp</button>
               <br><br>
               <button class="reset-button" onclick="resetForm()">Turnier beendet</button>
             </div>
           `;
-        } else if (result.round === 12 && document.getElementById("rounds").value === "12") {
+        } else if (result.round === 24 && document.getElementById("rounds").value === "24") {
           roundDiv.classList.add("highlight-round");
           roundDiv.innerHTML = `
-            <strong>Endstand von ${participantName} beim Turnier ${tournamentName} nach ${result.round} Runden:</strong><br>
+            <strong>Endstand von ${participantName} beim Turnier: ${tournamentName} nach ${result.round} Runden:</strong><br>
             Rundenpunkte: ${result.points}<br>
             Erzielte X: ${result.xCount}<br>
             <hr>
             <strong>Gesamtpunkte:</strong> <strong>${totalPoints}</strong> (Pause: ${pausePoints})<br>
             <strong>Gesamt X:</strong> <strong>${totalXCount}</strong> (Pause: ${pauseXCount})
             <div class="whatsapp-container">
-              <button class="whatsapp-button" onclick="shareResult('Endstand von ${participantName} beim Turnier ${tournamentName} nach ${result.round} Runden: Rundenpunkte: ${result.points} Erzielte X: ${result.xCount} Gesamtpunkte: ${totalPoints} Gesamt X: ${totalXCount}')">Teilen auf WhatsApp</button>
+              <button class="whatsapp-button" onclick="shareResult('Endstand von ${participantName} beim Turnier: ${tournamentName} nach ${result.round} Runden: Rundenpunkte: ${result.points} Erzielte X: ${result.xCount} Gesamtpunkte: ${totalPoints} Gesamt X: ${totalXCount}')">Teilen auf WhatsApp</button>
               <br><br>
               <button class="reset-button" onclick="resetForm()">Turnier beendet</button>
             </div>
           `;
         } else {
           roundDiv.innerHTML = `
-            <strong>Ergebnis von ${participantName} beim Turnier ${tournamentName} nach ${result.round} Runden:</strong><br>
+            <strong>Ergebnis von ${participantName} beim Turnier: ${tournamentName} nach ${result.round} Runden:</strong><br>
             Rundenpunkte: ${result.points}<br>
             Erzielte X: ${result.xCount}<br>
             <hr>
